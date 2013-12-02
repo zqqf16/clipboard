@@ -6,7 +6,7 @@ import test
 
 def main():
     suites = test.all()
-    runner = unittest.TextTestRunner().run(suites)
+    runner = unittest.TextTestRunner(verbosity=2).run(suites)
 
 if __name__ == '__main__':
     main()
