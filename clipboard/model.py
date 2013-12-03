@@ -6,13 +6,12 @@ import uuid
 import os
 from datetime import datetime
 
-FILE_NAME = 'messages.json'
-
 class DataBase(object):
     def __init__(self, name):
         self.name = name
 
         if not os.path.isfile(self.name):
+            print "not file"
             with open(self.name, 'w'):
                 pass
 
@@ -67,11 +66,19 @@ class FieldDescriptor(object):
     def __get__(self, instance, owner):
         if instance is None:
             return self.field
+
+        if not hasattr(instance, '_data'):
+            setattr(instance, '_data', {})
+
         return instance._data.get(self.field.name)
 
     def __set__(self, instance, value):
         if not isinstance(value, self.field._type):
             raise TypeError('Error type: {}'.format(type(value)))
+
+        if not hasattr(instance, '_data'):
+            setattr(instance, '_data', {})
+
         instance._data[self.field.name] = value
 
 class ModelMeta(type):
@@ -83,14 +90,13 @@ class ModelMeta(type):
             attrs[k] = FieldDescriptor(v)
 
         attrs['_fields'] = _fields
-        attrs['_data'] = {}
-        attrs['_all'] = None
 
         return super(ModelMeta, self).__new__(self, name, bases, attrs)
 
 class Model(object):
     __metaclass__ = ModelMeta
     db = None
+    _all = None
 
     def __init__(self, id=None, **kwargs):
         if id:
@@ -105,13 +111,12 @@ class Model(object):
         
         self.id = id if id else str(uuid.uuid1())
 
-
     @classmethod
     def all(cls):
         if cls._all != None:
             return cls._all
 
-        if not cls.db:
+        if cls.db:
             jsons = cls.db.read()
             cls._all = [cls(**j) for j in jsons]
         else:

@@ -57,10 +57,14 @@ class TestModel(unittest.TestCase):
         t2 = TmpModel(title="temp2", date=datetime.now())
 
         TmpModel.add(t)
-        print "1111", TmpModel._all
         TmpModel.add(t2)
-        print "2222", TmpModel._all
+        TmpModel.save()
 
+        a = TmpModel.all()
+
+        self.assertEqual(t.title, a[0].title)
+        self.assertEqual(t2.title, a[1].title)
+        
         self.clear()
 
     def clear(self):

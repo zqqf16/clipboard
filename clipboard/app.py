@@ -13,7 +13,8 @@ class App(tornado.web.Application):
     def __init__(self):
         handlers = [
             (r'/', Clipboard),
-            (r'/clipboard', Clipboard)
+            (r'/clipboard', Clipboard),
+            (r'/clipboard/add', Clipboard),
         ]
 
         settings = {

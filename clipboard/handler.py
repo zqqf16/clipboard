@@ -17,6 +17,4 @@ class Clipboard(tornado.web.RequestHandler):
         Message.add(m)
         Message.save()
 
-        msgs = Message.all()
-        self.render('clipboard.html', messages=msgs)
-        
+        self.redirect('/clipboard')
