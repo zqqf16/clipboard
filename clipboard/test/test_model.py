@@ -14,6 +14,9 @@ class TmpModel(model.Model):
     title = model.StringField()
     date = model.DateField(date_format)
 
+    def __repr__(self):
+        return 'title {}, date {}'.format(self.title, self.date.strftime('%Y-%m-%d'))
+
 class TestModel(unittest.TestCase):
     def setUp(self):
         self.date = datetime.strptime('2013-12-01', date_format)
@@ -41,19 +44,23 @@ class TestModel(unittest.TestCase):
         self.assertEqual(d['date'], '2013-12-01')
         self.assertEqual(d['title'], 'test')
 
-    def test_field_load(self):
+    def test_model_init(self):
         d = self.m.dump()
 
-        m1 = TmpModel()
-        m1.load(**d)
+        m1 = TmpModel(**d)
 
         self.assertEqual(self.m.date, m1.date)
         self.assertEqual(self.m.title, m1.title)
 
     def test_save(self):
-        TmpModel.append(self.m)
-        a = TmpModel.all()
-        self.assertEqual(a[0].id, self.m.id)
+        t = TmpModel(title="temp", date=datetime.now())
+        t2 = TmpModel(title="temp2", date=datetime.now())
+
+        TmpModel.add(t)
+        print "1111", TmpModel._all
+        TmpModel.add(t2)
+        print "2222", TmpModel._all
+
         self.clear()
 
     def clear(self):

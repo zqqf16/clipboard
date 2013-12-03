@@ -2,10 +2,21 @@
 # -*- coding: utf-8 -*-
 
 import tornado.web
+from model import Message, datetime
 
 class Clipboard(tornado.web.RequestHandler):
     def get(self):
-        self.render('clipboard.html')
+        msgs = Message.all()
+        self.render('clipboard.html', messages=msgs)
 
     def post(self):
-        print self.get_argument('content', None)
+        content = self.get_argument('content', None)
+        date = datetime.now()
+        m = Message(content=content, date=date)
+
+        Message.add(m)
+        Message.save()
+
+        msgs = Message.all()
+        self.render('clipboard.html', messages=msgs)
+        

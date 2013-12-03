@@ -16,7 +16,7 @@ class DataBase(object):
             with open(self.name, 'w'):
                 pass
 
-    def get(self):
+    def read(self):
         '''Get data from json file'''
 
         with open(self.name, 'r') as f:
@@ -26,7 +26,7 @@ class DataBase(object):
             else:
                 return []
 
-    def save(self, data):
+    def write(self, data):
         '''Save given data to json file'''
 
         with open(self.name, 'w') as f:
@@ -84,6 +84,7 @@ class ModelMeta(type):
 
         attrs['_fields'] = _fields
         attrs['_data'] = {}
+        attrs['_all'] = None
 
         return super(ModelMeta, self).__new__(self, name, bases, attrs)
 
@@ -91,29 +92,59 @@ class Model(object):
     __metaclass__ = ModelMeta
     db = None
 
-    def __init__(self, *args, **kwargs):
-        self.id = None
-        for k, v in kwargs.items():
-            setattr(self, k, v)
+    def __init__(self, id=None, **kwargs):
+        if id:
+            # load from database
+            for k, v in kwargs.items():
+                field = self._fields.get(k, None)
+                if not field: continue
+                setattr(self, k, field.load(v))
+        else:
+            for k, v in kwargs.items():
+                setattr(self, k, v)
+        
+        self.id = id if id else str(uuid.uuid1())
+
 
     @classmethod
     def all(cls):
+        if cls._all != None:
+            return cls._all
+
         if not cls.db:
-            return []
-        return [cls().load(**v) for v in cls.db.get()]
+            jsons = cls.db.read()
+            cls._all = [cls(**j) for j in jsons]
+        else:
+            cls._all = []
+
+        return cls._all
 
     @classmethod
-    def append(cls, instance):
-        a = cls.all()
-        a.append(instance)
-        cls.db.save([i.dump() for i in a])
+    def add(cls, m):
+        if cls._all != None:
+            for c in cls._all:
+                if c.id == m.id:
+                    return
+            cls._all.append(m)
+        else:
+            cls._all = [m]
+
+    @classmethod
+    def delete(cls, m):
+        pass
+
+    @classmethod
+    def save(cls):
+        if cls._all == None:
+            return
+
+        if not cls.db:
+            return
+
+        cls.db.write([m.dump() for m in cls._all])
 
     def dump(self):
         '''Dump values to json friendly structure'''
-
-        if not self.id:
-            #Generate a new id.
-            self.id = str(uuid.uuid1())
 
         _dict = {'id': self.id}
 
@@ -121,20 +152,6 @@ class Model(object):
             _dict[column] = field.dump(self._data[column])
 
         return _dict
-
-    def load(self, **kwargs):
-        '''Load values from json friendly structure'''
-
-        if kwargs.get('id'):
-            self.id = kwargs.get('id')
-
-        for k, v in kwargs.items():
-            field = self._fields.get(k, None)
-            if not field: continue
-
-            setattr(self, k, field.load(v))
-
-        return self
 
 class Message(Model):
     content = StringField()
