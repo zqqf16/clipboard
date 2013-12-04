@@ -1,20 +1,30 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
-<head>
-	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-	<link rel="stylesheet" href="/static/css/style.css" />
-	<title>Clipboard</title>
-</head>
-<body>
-	<form action="/clipboard" method="post">
-		<textarea name="content" rows="10" cols="30"></textarea>
-		<input type="submit" value="submit"/>
-	</form>
-	<div>
-		{% for m in messages %}
-		<p>{{m.date.strftime('%Y-%m-%d')}}</p>
-		<pre>{{m.content}}</pre>
-		{% end %}
-	</div>
-</body>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+		<link rel="stylesheet" href="/static/css/pure-min.css" />
+		<link rel="stylesheet" href="/static/css/style.css" />
+		<title>Clipboard</title>
+	</head>
+	<body>
+		<div class="pure-g-r main">
+			<div class="pure-u-1 messages">
+				<h1>ClipBoard</h1>
+				<div class="messages">
+					{% for m in messages %}
+					<div class="message">
+						<p class="date">{{m.date.strftime('%Y-%m-%d')}}</p>
+						<pre><code>{{m.content}}</code></pre>
+					</div>
+					{% end %}
+				</div>
+				<div>
+					<form class="pure-form pure-form-stacked" action="/clipboard" method="post">
+						<textarea class="pure-input-1" name="content" rows="10"></textarea>
+						<button type="submit" class="pure-button pure-button-secondary">Submit</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
 </html>
