@@ -50,7 +50,7 @@ class StringField(Field):
 
 class DateField(Field):
     _type = datetime
-    def __init__(self, format='%Y-%m-%d'):
+    def __init__(self, format='%Y-%m-%d %H:%M'):
         self.format = format
 
     def dump(self, value):

@@ -13,7 +13,7 @@
 				<div class="messages">
 					{% for m in messages %}
 					<div class="message">
-						<p class="date">{{m.date.strftime('%Y-%m-%d')}}</p>
+						<p class="date">{{m.date.strftime('%Y-%m-%d %H:%M')}}</p>
 						<pre><code>{{m.content}}</code></pre>
 					</div>
 					{% end %}

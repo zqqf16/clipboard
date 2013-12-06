@@ -7,6 +7,7 @@ from model import Message, datetime
 class Clipboard(tornado.web.RequestHandler):
     def get(self):
         msgs = Message.all()
+        msgs.sort(lambda x, y: cmp(x.date, y.date), reverse=True)
         self.render('clipboard.html', messages=msgs)
 
     def post(self):
