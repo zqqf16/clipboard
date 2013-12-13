@@ -2,18 +2,17 @@
 # -*- coding: utf-8 -*-
 
 import tornado.web
-from model import Message
+from model import Entry
 from datetime import datetime
 
 class Clipboard(tornado.web.RequestHandler):
     def get(self):
-        msgs = [m for m in Message.select().order_by(Message.date.desc())]
-        msgs.sort(lambda x, y: cmp(x.date, y.date), reverse=True)
-        self.render('clipboard.html', messages=msgs)
+        entries = [e for e in Entry.select().order_by(Entry.date.desc())]
+        self.render('clipboard.html', entries=entries)
 
     def post(self):
         content = self.get_argument('content', None)
         date = datetime.now()
-        m = Message.create(content=content, date=date)
-        m.save()
+        e = Entry.create(content=content, date=date)
+        e.save()
         self.redirect('/clipboard')

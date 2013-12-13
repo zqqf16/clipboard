@@ -7,7 +7,7 @@ from peewee import *
 _DB = 'clipboard.db'
 db = SqliteDatabase(_DB)
 
-class Message(Model):
+class Entry(Model):
     date = DateTimeField()
     content = TextField()
 
@@ -19,7 +19,7 @@ def init(db_name=_DB):
         return
 
     #Create table
-    Message.create_table()
+    Entry.create_table()
 
 if __name__ == '__main__':
     init()

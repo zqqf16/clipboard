@@ -8,13 +8,13 @@
 	</head>
 	<body>
 		<div class="pure-g-r main">
-			<div class="pure-u-1 messages">
+			<div class="pure-u-1 entries">
 				<h1>ClipBoard</h1>
-				<div class="messages">
-					{% for m in messages %}
-					<div class="message">
-						<p class="date">{{m.date.strftime('%Y-%m-%d %H:%M')}}</p>
-						<pre><code>{{m.content}}</code></pre>
+				<div class="entries">
+					{% for e in entries %}
+					<div class="entry">
+						<p class="date">{{e.date.strftime('%Y-%m-%d %H:%M')}}</p>
+						<pre><code>{{e.content}}</code></pre>
 					</div>
 					{% end %}
 				</div>
