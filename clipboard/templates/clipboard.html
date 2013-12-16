@@ -15,6 +15,7 @@
 					<div class="entry", id="{{e.id}}">
 						<p class="date">{{e.date.strftime('%Y-%m-%d %H:%M')}}</p>
 						<pre><code>{{e.content}}</code></pre>
+						<button onclick="delete_entry('{{e.id}}')" class="pure-button">Delete</button>
 					</div>
 					{% end %}
 				</div>
@@ -26,5 +27,29 @@
 				</div>
 			</div>
 		</div>
+		<script type="text/javascript">
+			function delete_entry(id) {
+				var form = new FormData();
+				form.append("id", id);
+
+				var xhr = new XMLHttpRequest();
+				xhr.open("DELETE", "/c/"+id, true);
+				xhr.responseType = "json";
+				xhr.onload = function(e) {
+					if (this.status == 200) {
+						var data = JSON.parse(this.response);
+						if (data.status == 'success'){
+							window.location.reload();
+						} else {
+							alert(data.status);
+						}
+					} else {
+						alert('Connection error!');
+					}
+				};
+
+				xhr.send(form);
+			};
+		</script>
 	</body>
 </html>
