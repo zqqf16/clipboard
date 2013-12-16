@@ -4,7 +4,7 @@
 import unittest
 
 ALL_MODULES = [
-    'test.test_model',
+    'test.test_web',
 ]
 
 def all():

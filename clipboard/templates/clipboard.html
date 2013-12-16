@@ -8,23 +8,48 @@
 	</head>
 	<body>
 		<div class="pure-g-r main">
-			<div class="pure-u-1 messages">
+			<div class="pure-u-1 entries">
 				<h1>ClipBoard</h1>
-				<div class="messages">
-					{% for m in messages %}
-					<div class="message">
-						<p class="date">{{m.date.strftime('%Y-%m-%d %H:%M')}}</p>
-						<pre><code>{{m.content}}</code></pre>
+				<div class="entries">
+					{% for e in entries %}
+					<div class="entry", id="{{e.id}}">
+						<p class="date">{{e.date.strftime('%Y-%m-%d %H:%M')}}</p>
+						<pre><code>{{e.content}}</code></pre>
+						<button onclick="delete_entry('{{e.id}}')" class="pure-button">Delete</button>
 					</div>
 					{% end %}
 				</div>
 				<div>
-					<form class="pure-form pure-form-stacked" action="/clipboard" method="post">
+					<form class="pure-form pure-form-stacked" action="/" method="post">
 						<textarea class="pure-input-1" name="content" rows="10"></textarea>
 						<button type="submit" class="pure-button pure-button-secondary">Submit</button>
 					</form>
 				</div>
 			</div>
 		</div>
+		<script type="text/javascript">
+			function delete_entry(id) {
+				var form = new FormData();
+				form.append("id", id);
+
+				var xhr = new XMLHttpRequest();
+				xhr.open("DELETE", "/c/"+id, true);
+				xhr.responseType = "json";
+				xhr.onload = function(e) {
+					if (this.status == 200) {
+						var data = JSON.parse(this.response);
+						if (data.status == 'success'){
+							window.location.reload();
+						} else {
+							alert(data.status);
+						}
+					} else {
+						alert('Connection error!');
+					}
+				};
+
+				xhr.send(form);
+			};
+		</script>
 	</body>
 </html>
