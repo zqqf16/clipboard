@@ -12,14 +12,14 @@
 				<h1>ClipBoard</h1>
 				<div class="entries">
 					{% for e in entries %}
-					<div class="entry">
+					<div class="entry", id="{{e.id}}">
 						<p class="date">{{e.date.strftime('%Y-%m-%d %H:%M')}}</p>
 						<pre><code>{{e.content}}</code></pre>
 					</div>
 					{% end %}
 				</div>
 				<div>
-					<form class="pure-form pure-form-stacked" action="/clipboard" method="post">
+					<form class="pure-form pure-form-stacked" action="/" method="post">
 						<textarea class="pure-input-1" name="content" rows="10"></textarea>
 						<button type="submit" class="pure-button pure-button-secondary">Submit</button>
 					</form>

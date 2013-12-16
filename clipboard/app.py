@@ -7,14 +7,14 @@ import tornado.ioloop
 import tornado.web
 import tornado.httpserver
 
-from handler import Clipboard
+from handler import *
 
 class App(tornado.web.Application):
     def __init__(self):
         handlers = [
-            (r'/', Clipboard),
-            (r'/clipboard', Clipboard),
-            (r'/clipboard/add', Clipboard),
+            (r'/', IndexHandler),
+            (r'/c[/]?', MainHandler),
+            (r'/c/(.*)', SingleHandler),
         ]
 
         settings = {
