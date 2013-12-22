@@ -39,6 +39,12 @@ pre, code {
 p.date {
 	font-size: 0.8em;
 	margin-bottom: 4px;
+
+	background: #df2d4f;
+	color: #fff;
+	margin: 0 0.1em;
+	padding: 0.3em 1em;
+	width: 102px;
 }
 .entry {
 	margin-bottom: 20px;
