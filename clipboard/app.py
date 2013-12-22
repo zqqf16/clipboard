@@ -7,10 +7,14 @@ import tornado.ioloop
 import tornado.web
 import tornado.httpserver
 
+import model
 from handler import *
 
 class App(tornado.web.Application):
     def __init__(self):
+        #Init databas
+        model.init()
+
         handlers = [
             (r'/', IndexHandler),
             (r'/c[/]?', MainHandler),
